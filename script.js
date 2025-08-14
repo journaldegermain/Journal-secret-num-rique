@@ -1,54 +1,41 @@
-const todayDate = document.getElementById('todayDate');
-const todayNotes = document.getElementById('todayNotes');
-const pastNotes = document.getElementById('pastNotes');
-const noteText = document.getElementById('noteText');
-const noteMood = document.getElementById('noteMood');
-const addNote = document.getElementById('addNote');
-const toggleTheme = document.getElementById('toggleTheme');
+const dateEl = document.getElementById("date");
+const noteInput = document.getElementById("note-input");
+const moodSelect = document.getElementById("mood");
+const addBtn = document.getElementById("add-note");
+const notesList = document.getElementById("notes-list");
+const toggleThemeBtn = document.getElementById("toggle-theme");
 
 const today = new Date().toISOString().split('T')[0];
-todayDate.textContent = today;
+dateEl.textContent = today;
 
-// Mode clair/sombre
-toggleTheme.addEventListener('click', () => {
-  document.body.classList.toggle('light');
-});
-
-// Charger les notes depuis LocalStorage
-let journal = JSON.parse(localStorage.getItem('journal')) || {};
-
-// Afficher notes
-function renderNotes() {
-  todayNotes.innerHTML = '';
-  pastNotes.innerHTML = '';
-
-  Object.keys(journal).sort((a,b) => b.localeCompare(a)).forEach(date => {
-    journal[date].forEach(note => {
-      const li = document.createElement('li');
-      li.textContent = `${note.time} ${note.mood} : ${note.text}`;
-      if(date === today) {
-        todayNotes.appendChild(li);
-      } else {
-        pastNotes.appendChild(li);
-      }
+function loadNotes() {
+  const notes = JSON.parse(localStorage.getItem("journalNotes") || "{}");
+  notesList.innerHTML = "";
+  for (const day in notes) {
+    notes[day].forEach(n => {
+      const div = document.createElement("div");
+      div.className = "note" + (document.body.classList.contains("dark") ? " dark" : "");
+      div.dataset.mood = n.mood;
+      div.innerHTML = `<strong>${day}</strong> [${n.mood}]<br>${n.text}`;
+      notesList.appendChild(div);
     });
-  });
+  }
 }
 
-// Ajouter note
-addNote.addEventListener('click', () => {
-  const text = noteText.value.trim();
-  if(!text) return alert("Écris quelque chose !");
-  
-  const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  const mood = noteMood.value;
-  
-  if(!journal[today]) journal[today] = [];
-  journal[today].push({text, mood, time});
-  
-  localStorage.setItem('journal', JSON.stringify(journal));
-  noteText.value = '';
-  renderNotes();
+addBtn.addEventListener("click", () => {
+  const text = noteInput.value.trim();
+  if (!text) return alert("Écris une note !");
+  const notes = JSON.parse(localStorage.getItem("journalNotes") || "{}");
+  if (!notes[today]) notes[today] = [];
+  notes[today].push({ text, mood: moodSelect.value });
+  localStorage.setItem("journalNotes", JSON.stringify(notes));
+  noteInput.value = "";
+  loadNotes();
 });
 
-renderNotes();
+toggleThemeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  loadNotes();
+});
+
+loadNotes();
