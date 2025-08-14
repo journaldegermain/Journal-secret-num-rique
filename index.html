@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal Secret</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Journal Secret</h1>
+      <button id="toggleTheme">🌙/☀️</button>
+    </header>
+    
+    <section id="today">
+      <h2>Aujourd'hui (<span id="todayDate"></span>)</h2>
+      <div id="newNote">
+        <textarea id="noteText" placeholder="Écris ta note..."></textarea>
+        <select id="noteMood">
+          <option value="😃">😃 Heureux</option>
+          <option value="😢">😢 Triste</option>
+          <option value="😡">😡 En colère</option>
+          <option value="😍">😍 Amoureux</option>
+          <option value="😎">😎 Cool</option>
+        </select>
+        <button id="addNote">Ajouter note</button>
+      </div>
+      <ul id="todayNotes"></ul>
+    </section>
+
+    <section id="pastDays">
+      <h2>Jours précédents</h2>
+      <ul id="pastNotes"></ul>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
